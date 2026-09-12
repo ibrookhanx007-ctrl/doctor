@@ -4,6 +4,13 @@
 @import '@fontsource/public-sans/600.css';
 @import '@fontsource/public-sans/700.css';
 
+/* Native cross-document page transitions. Progressive enhancement only —
+   unsupported browsers just get a normal navigation, so this is safe to
+   opt into without any JS routing or risk to existing page scripts. */
+@view-transition {
+  navigation: auto;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -46,11 +53,17 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-sans font-semibold no-underline transition-transform duration-150 ease-out;
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-sans font-semibold no-underline;
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease,
+      border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
   }
 
   .btn:active {
-    transform: scale(0.97);
+    transform: translateY(0) scale(0.97);
   }
 
   .btn-book {
@@ -59,6 +72,7 @@
 
   .btn-book:hover {
     @apply bg-clay-700;
+    box-shadow: 0 10px 20px -12px rgba(154, 80, 57, 0.6);
   }
 
   .btn-quiet {
@@ -83,5 +97,163 @@
 
   .hairline {
     @apply border-t border-sand;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   Animation utilities
+   Small, reusable primitives for entrance/scroll/hover motion. Everything
+   here animates only transform/opacity (plus box-shadow, which is
+   paint-only and doesn't affect layout) so nothing triggers layout shift.
+   The prefers-reduced-motion block at the bottom is unlayered CSS, which
+   sits above Tailwind's cascade layers and so always wins.
+------------------------------------------------------------------------ */
+@layer components {
+  /* Scroll-reveal: JS (ScrollReveal.astro) toggles .is-visible via
+     IntersectionObserver. Starts pre-rendered in its final, laid-out
+     position — only opacity/transform change, so no CLS. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: transform, opacity;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Hero entrance: plays immediately on load (above the fold), no JS
+     needed so it never depends on IntersectionObserver timing. */
+  .hero-in {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: hero-fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: var(--hero-delay, 0ms);
+  }
+
+  @keyframes hero-fade-up {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Subtle, slow float for hero imagery. */
+  .float-slow {
+    animation: float-slow 7s ease-in-out infinite;
+  }
+
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Hover lift for list rows / review blocks / staff rows — a quiet
+     alternative to identical shadowed cards: no shadow until touched. */
+  .hover-lift {
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.25s ease;
+  }
+
+  .hover-lift:hover,
+  .hover-lift:focus-within {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px -16px rgba(30, 61, 52, 0.35);
+  }
+
+  /* Subtle image zoom on hover — wrap an <img> in a .img-zoom container
+     with overflow-hidden. */
+  .img-zoom {
+    overflow: hidden;
+  }
+
+  .img-zoom img {
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .img-zoom:hover img,
+  .img-zoom:focus-within img {
+    transform: scale(1.045);
+  }
+
+  /* Nav link underline that grows in from the left on hover/focus. */
+  .nav-link {
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /* Sticky header: quiet by default, gains depth once the page scrolls. */
+  .site-header {
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+  }
+
+  .site-header.is-scrolled {
+    box-shadow: 0 8px 24px -20px rgba(35, 32, 28, 0.4);
+  }
+
+  /* Mobile menu open/close transition (base state = closed). Toggled by
+     Header.astro's script alongside the `hidden` attribute so the closed
+     menu is still fully removed from the accessibility tree and tab
+     order — the animation only covers the visible open/close moment. */
+  #mobile-menu {
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  #mobile-menu.menu-open {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .hero-in {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .hover-lift:hover,
+  .hover-lift:focus-within,
+  .img-zoom:hover img,
+  .img-zoom:focus-within img {
+    transform: none !important;
+  }
+
+  .float-slow {
+    animation: none !important;
   }
 }

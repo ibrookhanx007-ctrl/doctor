@@ -4,7 +4,7 @@ import BookingButton from './BookingButton.astro';
 
 const currentPath = Astro.url.pathname;
 ---
-<header class="border-b border-sand bg-linen">
+<header id="site-header" class="site-header sticky top-0 z-40 border-b border-sand bg-linen">
   <div class="mx-auto max-w-content px-6 sm:px-10">
     <div class="flex h-20 items-center justify-between">
       <a href="/" class="font-serif text-xl sm:text-2xl font-semibold text-pine no-underline">
@@ -17,7 +17,7 @@ const currentPath = Astro.url.pathname;
           return (
             <a
               href={link.href}
-              class={`no-underline font-medium ${isActive ? 'text-pine' : 'text-ink-soft hover:text-pine'}`}
+              class={`nav-link no-underline font-medium transition-colors duration-200 ${isActive ? 'text-pine' : 'text-ink-soft hover:text-pine'}`}
               aria-current={isActive ? 'page' : undefined}
             >
               {link.label}
@@ -27,7 +27,7 @@ const currentPath = Astro.url.pathname;
       </nav>
 
       <div class="hidden lg:flex items-center gap-5">
-        <a href={`tel:${PHONE_TEL}`} class="text-ink-soft no-underline hover:text-pine font-medium">
+        <a href={`tel:${PHONE_TEL}`} class="text-ink-soft no-underline hover:text-pine font-medium transition-colors duration-200">
           {PHONE_DISPLAY}
         </a>
         <BookingButton class="!px-5 !py-2.5 text-sm" />
@@ -54,14 +54,14 @@ const currentPath = Astro.url.pathname;
     </div>
   </div>
 
-  <div id="mobile-menu" class="lg:hidden hidden border-t border-sand bg-linen">
+  <div id="mobile-menu" hidden class="lg:hidden border-t border-sand bg-linen">
     <nav class="flex flex-col px-6 py-4 gap-1" aria-label="Mobile">
       {NAV_LINKS.map((link) => (
-        <a href={link.href} class="no-underline text-ink py-3 border-b border-sand/60 font-medium">
+        <a href={link.href} class="no-underline text-ink hover:text-pine py-3 border-b border-sand/60 font-medium transition-colors duration-200">
           {link.label}
         </a>
       ))}
-      <a href={`tel:${PHONE_TEL}`} class="no-underline text-ink-soft py-3 font-medium">
+      <a href={`tel:${PHONE_TEL}`} class="no-underline text-ink-soft hover:text-pine py-3 font-medium transition-colors duration-200">
         Call {PHONE_DISPLAY}
       </a>
       <div class="pt-3">
@@ -73,15 +73,53 @@ const currentPath = Astro.url.pathname;
 
 <script is:inline>
   (function () {
+    const header = document.getElementById('site-header');
     const toggle = document.getElementById('menu-toggle');
     const menu = document.getElementById('mobile-menu');
     const iconOpen = document.getElementById('icon-open');
     const iconClose = document.getElementById('icon-close');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (header) {
+      const updateScrolled = function () {
+        header.classList.toggle('is-scrolled', window.scrollY > 8);
+      };
+      updateScrolled();
+      window.addEventListener('scroll', updateScrolled, { passive: true });
+    }
+
     if (!toggle || !menu) return;
+
+    let closeTimer = null;
+
+    function openMenu() {
+      clearTimeout(closeTimer);
+      menu.hidden = false;
+      // Force layout so the browser registers the closed state before we
+      // animate to open, even when the element was just un-hidden.
+      void menu.offsetHeight;
+      menu.classList.add('menu-open');
+    }
+
+    function closeMenu() {
+      menu.classList.remove('menu-open');
+      if (reduceMotion) {
+        menu.hidden = true;
+      } else {
+        closeTimer = setTimeout(function () {
+          menu.hidden = true;
+        }, 250);
+      }
+    }
+
     toggle.addEventListener('click', function () {
       const expanded = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', String(!expanded));
-      menu.classList.toggle('hidden');
+      if (expanded) {
+        closeMenu();
+      } else {
+        openMenu();
+      }
       iconOpen && iconOpen.classList.toggle('hidden');
       iconClose && iconClose.classList.toggle('hidden');
     });

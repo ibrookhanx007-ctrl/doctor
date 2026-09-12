@@ -32,7 +32,7 @@ const year = new Date().getFullYear();
       <p class="font-serif text-lg font-semibold">Explore</p>
       <ul class="mt-3 space-y-2">
         {NAV_LINKS.map((link) => (
-          <li><a href={link.href} class="text-linen/80 no-underline hover:text-linen hover:underline">{link.label}</a></li>
+          <li><a href={link.href} class="text-linen/80 no-underline hover:text-linen hover:underline transition-colors duration-200">{link.label}</a></li>
         ))}
       </ul>
     </div>

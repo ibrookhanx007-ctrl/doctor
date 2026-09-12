@@ -40,7 +40,7 @@ const newPatientLink = calLink('newPatient');
           const a = document.createElement('a');
           a.href = '/book?type=new-patient-exam&date=' + slot.isoDate;
           a.className =
-            'flex flex-col items-start rounded border border-linen/25 px-4 py-2 no-underline text-linen hover:bg-linen/10 hover:border-linen/50 transition-colors';
+            'flex flex-col items-start rounded border border-linen/25 px-4 py-2 no-underline text-linen transition-all duration-200 hover:bg-linen/10 hover:border-linen/50 hover:-translate-y-0.5';
           a.setAttribute('data-cal-link', newPatientLink);
           a.setAttribute('data-cal-config', JSON.stringify({ layout: 'month_view', date: slot.isoDate }));
           const date = document.createElement('span');

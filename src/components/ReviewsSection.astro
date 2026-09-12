@@ -3,10 +3,14 @@ import { REVIEWS } from '../data/reviews';
 ---
 <section class="section bg-linen-200/50" aria-labelledby="reviews-heading">
   <div class="section-inner">
-    <h2 id="reviews-heading" class="text-3xl sm:text-4xl">What patients say</h2>
+    <h2 id="reviews-heading" class="reveal text-3xl sm:text-4xl" data-reveal>What patients say</h2>
     <div class="mt-10 grid gap-x-12 gap-y-10 sm:grid-cols-2">
       {REVIEWS.map((review, i) => (
-        <figure class={i >= 2 ? 'pt-8 border-t border-sand' : ''}>
+        <figure
+          class={`reveal hover-lift rounded ${i >= 2 ? 'pt-8 border-t border-sand' : ''}`}
+          data-reveal
+          style={`--reveal-delay: ${(i % 2) * 90}ms`}
+        >
           <blockquote class="font-serif text-xl leading-relaxed text-ink">
             "{review.quote}"
           </blockquote>

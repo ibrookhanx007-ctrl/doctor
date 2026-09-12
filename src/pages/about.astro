@@ -9,7 +9,7 @@ import { STAFF } from '../data/staff';
   description="The story behind Northgate Family Dental, our approach to care, and the team you'll meet at your visit."
 >
   <section class="section pb-10">
-    <div class="section-inner">
+    <div class="section-inner reveal" data-reveal>
       <h1 class="text-4xl sm:text-5xl">About Northgate</h1>
       <p class="mt-4 max-w-prose text-lg text-ink-soft leading-relaxed">
         We opened on Merrimon Avenue in 2011 with two chairs and moved to our current
@@ -30,10 +30,14 @@ import { STAFF } from '../data/staff';
 
   <section class="section" aria-labelledby="team-heading">
     <div class="section-inner">
-      <h2 id="team-heading" class="text-3xl sm:text-4xl">The rest of the team</h2>
+      <h2 id="team-heading" class="reveal text-3xl sm:text-4xl" data-reveal>The rest of the team</h2>
       <ul class="mt-6 divide-y divide-sand max-w-prose">
-        {STAFF.map((member) => (
-          <li class="py-4 flex justify-between gap-6">
+        {STAFF.map((member, i) => (
+          <li
+            class="reveal hover-lift py-4 px-3 -mx-3 rounded flex justify-between gap-6"
+            data-reveal
+            style={`--reveal-delay: ${Math.min(i, 4) * 60}ms`}
+          >
             <span class="font-serif text-lg text-pine">{member.name}</span>
             <span class="text-ink-soft">{member.role}</span>
           </li>
@@ -43,7 +47,7 @@ import { STAFF } from '../data/staff';
   </section>
 
   <section class="section bg-pine text-linen">
-    <div class="section-inner flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+    <div class="section-inner reveal flex flex-col sm:flex-row sm:items-center justify-between gap-6" data-reveal>
       <div>
         <h2 class="text-3xl text-linen">Come see us</h2>
         <p class="mt-2 text-linen/80 max-w-prose">We'd like to meet you.</p>

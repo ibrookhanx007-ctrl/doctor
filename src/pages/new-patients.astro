@@ -31,7 +31,7 @@ const faqs = [
   description="What to expect at your first visit to Northgate Family Dental, insurance and payment information, and answers to common questions."
 >
   <section class="section pb-10">
-    <div class="section-inner">
+    <div class="section-inner reveal" data-reveal>
       <h1 class="text-4xl sm:text-5xl">New patients</h1>
       <p class="mt-4 max-w-prose text-lg text-ink-soft leading-relaxed">
         We've tried to answer the questions people usually ask before their first visit.
@@ -45,7 +45,7 @@ const faqs = [
 
   <section class="section pt-0">
     <div class="section-inner grid gap-10 lg:grid-cols-2">
-      <div>
+      <div class="reveal" data-reveal>
         <h2 class="text-2xl">Your first visit</h2>
         <p class="mt-3 text-ink-soft leading-relaxed">
           A new patient exam runs about an hour. We'll take a set of X-rays if you don't have
@@ -54,7 +54,7 @@ const faqs = [
           there's time in the schedule that day.
         </p>
       </div>
-      <div>
+      <div class="reveal" data-reveal style="--reveal-delay: 90ms">
         <h2 class="text-2xl">Insurance & payment</h2>
         <p class="mt-3 text-ink-soft leading-relaxed">
           We're in network with Delta Dental, Cigna, Aetna, and MetLife, and we'll file claims
@@ -69,10 +69,14 @@ const faqs = [
 
   <section class="section" aria-labelledby="faq-heading">
     <div class="section-inner max-w-prose">
-      <h2 id="faq-heading" class="text-3xl">Questions people ask</h2>
+      <h2 id="faq-heading" class="reveal text-3xl" data-reveal>Questions people ask</h2>
       <dl class="mt-6 divide-y divide-sand">
-        {faqs.map((item) => (
-          <div class="py-5">
+        {faqs.map((item, i) => (
+          <div
+            class="reveal hover-lift py-5 px-3 -mx-3 rounded"
+            data-reveal
+            style={`--reveal-delay: ${Math.min(i, 4) * 60}ms`}
+          >
             <dt class="font-serif text-xl text-pine">{item.q}</dt>
             <dd class="mt-2 text-ink-soft leading-relaxed">{item.a}</dd>
           </div>
@@ -82,7 +86,7 @@ const faqs = [
   </section>
 
   <section class="section bg-pine text-linen">
-    <div class="section-inner flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+    <div class="section-inner reveal flex flex-col sm:flex-row sm:items-center justify-between gap-6" data-reveal>
       <div>
         <h2 class="text-3xl text-linen">Ready to come in?</h2>
         <p class="mt-2 text-linen/80">Or call us at <a href={`tel:${PHONE_TEL}`} class="text-linen underline">{PHONE_DISPLAY}</a>.</p>

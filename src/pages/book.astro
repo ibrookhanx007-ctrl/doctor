@@ -9,7 +9,7 @@ const tabs = Object.entries(EVENT_TYPES).map(([key, value]) => ({ key, ...value 
   description="Book a New Patient Exam, Cleaning, Emergency Visit, or Consultation at Northgate Family Dental in Asheville, NC."
 >
   <section class="section pb-6">
-    <div class="section-inner">
+    <div class="section-inner reveal" data-reveal>
       <h1 class="text-4xl sm:text-5xl">Book your visit</h1>
       <p class="mt-4 max-w-prose text-lg text-ink-soft leading-relaxed">
         Pick what you need below and choose a time that works. You'll get an email
@@ -31,7 +31,7 @@ const tabs = Object.entries(EVENT_TYPES).map(([key, value]) => ({ key, ...value 
             tabindex={i === 0 ? 0 : -1}
             data-tab-key={tab.key}
             data-cal-slug={tab.slug}
-            class="tab-button -mb-px px-4 py-3 font-medium text-ink-soft border-b-2 border-transparent aria-selected:border-clay aria-selected:text-pine"
+            class="tab-button -mb-px px-4 py-3 font-medium text-ink-soft border-b-2 border-transparent transition-colors duration-200 hover:text-pine aria-selected:border-clay aria-selected:text-pine"
           >
             {tab.label} <span class="text-ink-soft font-normal">· {tab.duration} min</span>
           </button>

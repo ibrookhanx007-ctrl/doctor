@@ -9,7 +9,7 @@ import { ADDRESS, EMAIL, HOURS, PHONE_DISPLAY, PHONE_TEL } from '../data/site';
   description="Get in touch with Northgate Family Dental in Asheville, NC — phone, email, address, hours, and a contact form."
 >
   <section class="section pb-10">
-    <div class="section-inner">
+    <div class="section-inner reveal" data-reveal>
       <h1 class="text-4xl sm:text-5xl">Contact us</h1>
       <p class="mt-4 max-w-prose text-lg text-ink-soft leading-relaxed">
         Call for anything urgent. For everything else, the form below reaches our front desk
@@ -20,7 +20,7 @@ import { ADDRESS, EMAIL, HOURS, PHONE_DISPLAY, PHONE_TEL } from '../data/site';
 
   <section class="section pt-0">
     <div class="section-inner grid gap-12 lg:grid-cols-2">
-      <div>
+      <div class="reveal" data-reveal>
         <h2 class="text-2xl">Send a message</h2>
         <form
           name="contact"
@@ -41,7 +41,7 @@ import { ADDRESS, EMAIL, HOURS, PHONE_DISPLAY, PHONE_TEL } from '../data/site';
               name="name"
               type="text"
               required
-              class="w-full border border-sand bg-linen-100 px-4 py-2.5 rounded focus:border-pine"
+              class="w-full border border-sand bg-linen-100 px-4 py-2.5 rounded transition-colors duration-200 focus:border-pine"
             />
           </div>
 
@@ -52,7 +52,7 @@ import { ADDRESS, EMAIL, HOURS, PHONE_DISPLAY, PHONE_TEL } from '../data/site';
               name="email"
               type="email"
               required
-              class="w-full border border-sand bg-linen-100 px-4 py-2.5 rounded focus:border-pine"
+              class="w-full border border-sand bg-linen-100 px-4 py-2.5 rounded transition-colors duration-200 focus:border-pine"
             />
           </div>
 
@@ -62,7 +62,7 @@ import { ADDRESS, EMAIL, HOURS, PHONE_DISPLAY, PHONE_TEL } from '../data/site';
               id="phone"
               name="phone"
               type="tel"
-              class="w-full border border-sand bg-linen-100 px-4 py-2.5 rounded focus:border-pine"
+              class="w-full border border-sand bg-linen-100 px-4 py-2.5 rounded transition-colors duration-200 focus:border-pine"
             />
           </div>
 
@@ -73,7 +73,7 @@ import { ADDRESS, EMAIL, HOURS, PHONE_DISPLAY, PHONE_TEL } from '../data/site';
               name="message"
               rows="5"
               required
-              class="w-full border border-sand bg-linen-100 px-4 py-2.5 rounded focus:border-pine"
+              class="w-full border border-sand bg-linen-100 px-4 py-2.5 rounded transition-colors duration-200 focus:border-pine"
             ></textarea>
           </div>
 
@@ -86,7 +86,7 @@ import { ADDRESS, EMAIL, HOURS, PHONE_DISPLAY, PHONE_TEL } from '../data/site';
         </div>
       </div>
 
-      <div>
+      <div class="reveal" data-reveal style="--reveal-delay: 90ms">
         <dl class="space-y-4">
           <div>
             <dt class="font-serif text-lg text-pine">Address</dt>
@@ -94,11 +94,11 @@ import { ADDRESS, EMAIL, HOURS, PHONE_DISPLAY, PHONE_TEL } from '../data/site';
           </div>
           <div>
             <dt class="font-serif text-lg text-pine">Phone</dt>
-            <dd><a href={`tel:${PHONE_TEL}`} class="text-ink-soft no-underline hover:text-pine">{PHONE_DISPLAY}</a></dd>
+            <dd><a href={`tel:${PHONE_TEL}`} class="text-ink-soft no-underline hover:text-pine transition-colors duration-200">{PHONE_DISPLAY}</a></dd>
           </div>
           <div>
             <dt class="font-serif text-lg text-pine">Email</dt>
-            <dd><a href={`mailto:${EMAIL}`} class="text-ink-soft no-underline hover:text-pine">{EMAIL}</a></dd>
+            <dd><a href={`mailto:${EMAIL}`} class="text-ink-soft no-underline hover:text-pine transition-colors duration-200">{EMAIL}</a></dd>
           </div>
           <div>
             <dt class="font-serif text-lg text-pine">Hours</dt>
