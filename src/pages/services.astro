@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BookingButton from '../components/BookingButton.astro';
+import ServiceIcon from '../components/ServiceIcon.astro';
+import { SERVICES } from '../data/services';
+---
+<Layout
+  title="Services"
+  description="General and cosmetic dentistry at Northgate Family Dental: cleanings, fillings, crowns, whitening, Invisalign, and emergency care."
+>
+  <section class="section pb-10">
+    <div class="section-inner">
+      <h1 class="text-4xl sm:text-5xl">Services</h1>
+      <p class="mt-4 max-w-prose text-lg text-ink-soft leading-relaxed">
+        We keep the list short on purpose. Everything below is something Dr. Marsh does
+        herself, chairside, at our Asheville office.
+      </p>
+    </div>
+  </section>
+
+  <section class="pb-16">
+    <div class="section-inner px-6 sm:px-10">
+      {SERVICES.map((service, i) => (
+        <div class={`grid gap-6 sm:grid-cols-[auto_1fr_auto] sm:items-center py-8 ${i > 0 ? 'border-t border-sand' : ''}`}>
+          <ServiceIcon name={service.name} class="w-9 h-9 text-clay-600" />
+          <div>
+            <h2 class="text-2xl">{service.name}</h2>
+            <p class="mt-2 max-w-prose text-ink-soft leading-relaxed">{service.description}</p>
+          </div>
+          <div class="sm:pl-6">
+            <BookingButton event={service.bookEvent} variant="quiet" label={`Book ${service.name}`} />
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="section bg-pine text-linen">
+    <div class="section-inner flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      <div>
+        <h2 class="text-3xl text-linen">Not sure which one you need?</h2>
+        <p class="mt-2 text-linen/80 max-w-prose">
+          Book a consultation and Dr. Marsh will tell you plainly what's going on and what your options are.
+        </p>
+      </div>
+      <BookingButton event="consultation" />
+    </div>
+  </section>
+</Layout>

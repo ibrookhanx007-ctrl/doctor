@@ -1,0 +1,99 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BookingButton from '../components/BookingButton.astro';
+import AvailabilityStrip from '../components/AvailabilityStrip.astro';
+import ServiceIcon from '../components/ServiceIcon.astro';
+import MeetDentist from '../components/MeetDentist.astro';
+import ReviewsSection from '../components/ReviewsSection.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import { Image } from 'astro:assets';
+import heroImage from '../assets/hero-office.jpg';
+import { SERVICES } from '../data/services';
+import { ADDRESS, HOURS, PHONE_DISPLAY, PHONE_TEL } from '../data/site';
+---
+<Layout
+  title="Home"
+  description="General and cosmetic dentistry in North Asheville. Four chairs, six people who know your name, and appointments that start on time."
+>
+  <section class="section pb-12 sm:pb-16">
+    <div class="section-inner grid gap-10 lg:grid-cols-2 lg:gap-16 items-center">
+      <div>
+        <h1 class="text-4xl sm:text-5xl leading-[1.1]">
+          Friendly, unhurried dental care in North Asheville.
+        </h1>
+        <p class="mt-5 max-w-prose text-lg text-ink-soft leading-relaxed">
+          Four chairs, six people who know your name, and appointments that start on time.
+          General and cosmetic dentistry for the whole family.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <BookingButton />
+          <a href={`tel:${PHONE_TEL}`} class="text-ink-soft no-underline hover:text-pine font-medium">
+            or call {PHONE_DISPLAY}
+          </a>
+        </div>
+      </div>
+      <div class="relative">
+        <Image
+          src={heroImage}
+          alt="A treatment room at Northgate Family Dental"
+          width={640}
+          height={480}
+          class="w-full h-auto rounded object-cover"
+          format="webp"
+          quality={72}
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  </section>
+
+  <AvailabilityStrip />
+
+  <section class="section" aria-labelledby="services-heading">
+    <div class="section-inner">
+      <h2 id="services-heading" class="text-3xl sm:text-4xl">What we do</h2>
+      <ul class="mt-8 grid gap-x-10 sm:grid-cols-2">
+        {SERVICES.map((service, i) => (
+          <li class={`flex gap-4 py-4 ${i < SERVICES.length - 2 ? 'border-b border-sand' : ''}`}>
+            <ServiceIcon name={service.name} class="w-7 h-7 text-clay-600 shrink-0 mt-0.5" />
+            <div>
+              <p class="font-serif text-lg text-pine">{service.name}</p>
+              <p class="text-ink-soft">{service.line}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <a href="/services" class="inline-block mt-8 font-medium text-pine">See all services and what they involve</a>
+    </div>
+  </section>
+
+  <div class="hairline"></div>
+  <MeetDentist />
+  <div class="hairline"></div>
+  <ReviewsSection />
+
+  <section class="section" aria-labelledby="location-heading">
+    <div class="section-inner grid gap-10 lg:grid-cols-2 lg:gap-16">
+      <div>
+        <h2 id="location-heading" class="text-3xl sm:text-4xl">Find us</h2>
+        <p class="mt-4 text-ink-soft leading-relaxed">
+          {ADDRESS.line1}<br />
+          {ADDRESS.line2}
+        </p>
+        <a href={`tel:${PHONE_TEL}`} class="inline-block mt-2 font-medium">{PHONE_DISPLAY}</a>
+
+        <p class="mt-8 font-serif text-lg text-pine">Hours</p>
+        <ul class="mt-2 space-y-1 max-w-xs">
+          {HOURS.map((row) => (
+            <li class="flex justify-between text-ink-soft">
+              <span>{row.label}</span>
+              <span>{row.hours}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <MapEmbed class="min-h-[320px]" />
+    </div>
+  </section>
+</Layout>

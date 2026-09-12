@@ -1,0 +1,136 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { CAL_USERNAME, EVENT_TYPES, PHONE_DISPLAY, PHONE_TEL } from '../data/site';
+
+const tabs = Object.entries(EVENT_TYPES).map(([key, value]) => ({ key, ...value }));
+---
+<Layout
+  title="Book an Appointment"
+  description="Book a New Patient Exam, Cleaning, Emergency Visit, or Consultation at Northgate Family Dental in Asheville, NC."
+>
+  <section class="section pb-6">
+    <div class="section-inner">
+      <h1 class="text-4xl sm:text-5xl">Book your visit</h1>
+      <p class="mt-4 max-w-prose text-lg text-ink-soft leading-relaxed">
+        Pick what you need below and choose a time that works. You'll get an email
+        confirmation and a reminder the day before.
+      </p>
+    </div>
+  </section>
+
+  <section class="section pt-0">
+    <div class="section-inner">
+      <div role="tablist" aria-label="Appointment type" class="flex flex-wrap gap-2 border-b border-sand">
+        {tabs.map((tab, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`tab-${tab.key}`}
+            aria-controls={`panel-${tab.key}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+            data-tab-key={tab.key}
+            data-cal-slug={tab.slug}
+            class="tab-button -mb-px px-4 py-3 font-medium text-ink-soft border-b-2 border-transparent aria-selected:border-clay aria-selected:text-pine"
+          >
+            {tab.label} <span class="text-ink-soft font-normal">· {tab.duration} min</span>
+          </button>
+        ))}
+      </div>
+
+      {tabs.map((tab, i) => (
+        <div
+          role="tabpanel"
+          id={`panel-${tab.key}`}
+          aria-labelledby={`tab-${tab.key}`}
+          hidden={i !== 0}
+          class="pt-8"
+        >
+          <div
+            id={`cal-inline-${tab.key}`}
+            class="min-h-[600px] w-full"
+            data-cal-namespace={tab.key}
+            data-cal-link={`${CAL_USERNAME}/${tab.slug}`}
+          >
+            <div class="h-[600px] w-full rounded bg-sand/40 animate-pulse" aria-hidden="true"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<script is:inline define:vars={{ tabs, phoneDisplay: PHONE_DISPLAY, phoneTel: PHONE_TEL }}>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const requestedType = params.get('type');
+    const requestedDate = params.get('date');
+
+    const initialized = {};
+
+    function initTab(tabKey, slug) {
+      if (initialized[tabKey]) return;
+      initialized[tabKey] = true;
+      const container = document.getElementById('cal-inline-' + tabKey);
+      if (!container) return;
+      container.innerHTML = '';
+
+      const config = { layout: 'month_view' };
+      if (requestedDate && requestedType === slug) config.date = requestedDate;
+
+      window.Cal('init', tabKey, { origin: 'https://cal.com' });
+      window.Cal.ns[tabKey]('inline', {
+        elementOrSelector: '#cal-inline-' + tabKey,
+        calLink: container.getAttribute('data-cal-link'),
+        config,
+      });
+
+      // If the embed script can't load, swap the blank space for a plain
+      // way to still get in touch, instead of leaving an empty box.
+      setTimeout(function () {
+        if (window.__calEmbedReady !== true && container.childElementCount === 0) {
+          container.innerHTML =
+            '<div class="rounded border border-sand bg-linen-200/60 px-6 py-10 text-center">' +
+            '<p class="text-ink-soft">The booking calendar did not load — this can happen if a browser extension blocks it.</p>' +
+            '<p class="mt-3"><a class="font-medium text-pine" href="tel:' + phoneTel + '">Call us at ' + phoneDisplay + '</a> and we will get you on the schedule.</p>' +
+            '</div>';
+        }
+      }, 4000);
+    }
+
+    function activate(tabKey) {
+      tabs.forEach(function (t) {
+        const btn = document.getElementById('tab-' + t.key);
+        const panel = document.getElementById('panel-' + t.key);
+        const isActive = t.key === tabKey;
+        if (btn) btn.setAttribute('aria-selected', String(isActive));
+        if (btn) btn.tabIndex = isActive ? 0 : -1;
+        if (panel) panel.hidden = !isActive;
+      });
+      const active = tabs.find(function (t) { return t.key === tabKey; });
+      if (active) initTab(active.key, active.slug);
+    }
+
+    document.querySelectorAll('[role="tab"]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        activate(btn.getAttribute('data-tab-key'));
+      });
+      btn.addEventListener('keydown', function (e) {
+        const tabButtons = Array.from(document.querySelectorAll('[role="tab"]'));
+        const index = tabButtons.indexOf(btn);
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const nextIndex = e.key === 'ArrowRight'
+            ? (index + 1) % tabButtons.length
+            : (index - 1 + tabButtons.length) % tabButtons.length;
+          const nextBtn = tabButtons[nextIndex];
+          nextBtn.focus();
+          activate(nextBtn.getAttribute('data-tab-key'));
+        }
+      });
+    });
+
+    const initialTab = tabs.find(function (t) { return t.slug === requestedType; });
+    activate(initialTab ? initialTab.key : tabs[0].key);
+  })();
+</script>

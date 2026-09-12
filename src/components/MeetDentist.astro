@@ -1,0 +1,29 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../assets/dentist-portrait.jpg';
+import { DENTIST } from '../data/staff';
+---
+<section class="section" aria-labelledby="dentist-heading">
+  <div class="section-inner grid gap-10 lg:grid-cols-[minmax(0,320px)_1fr] lg:gap-16 items-start">
+    <div class="relative w-full max-w-[320px]">
+      <div class="absolute -inset-3 bg-pine/10 rounded" aria-hidden="true"></div>
+      <Image
+        src={portrait}
+        alt={`Portrait of ${DENTIST.name}`}
+        width={480}
+        height={600}
+        class="relative w-full h-auto rounded object-cover"
+        format="webp"
+        quality={78}
+      />
+    </div>
+    <div>
+      <h2 id="dentist-heading" class="text-3xl sm:text-4xl">Meet the dentist</h2>
+      <p class="mt-2 font-serif text-xl text-clay-600">{DENTIST.name}</p>
+      <ul class="mt-4 space-y-1 text-ink-soft">
+        {DENTIST.credentials.map((c) => <li>{c}</li>)}
+      </ul>
+      <p class="mt-5 max-w-prose leading-relaxed text-ink">{DENTIST.bio}</p>
+    </div>
+  </div>
+</section>

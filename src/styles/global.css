@@ -1,0 +1,87 @@
+@import '@fontsource-variable/fraunces';
+@import '@fontsource/public-sans/400.css';
+@import '@fontsource/public-sans/500.css';
+@import '@fontsource/public-sans/600.css';
+@import '@fontsource/public-sans/700.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    @apply bg-linen text-ink font-sans antialiased;
+    font-size: 1.0625rem;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-serif text-pine;
+    font-weight: 600;
+  }
+
+  a {
+    @apply text-pine underline decoration-pine/30 underline-offset-2;
+  }
+
+  a:hover {
+    @apply decoration-pine;
+  }
+
+  /* Visible, deliberate focus states everywhere — no outline: none. */
+  :focus-visible {
+    outline: 3px solid #B5654A;
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: #E7DFCF;
+    color: #23201C;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-sans font-semibold no-underline transition-transform duration-150 ease-out;
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn-book {
+    @apply btn bg-clay-600 text-linen;
+  }
+
+  .btn-book:hover {
+    @apply bg-clay-700;
+  }
+
+  .btn-quiet {
+    @apply btn bg-transparent text-pine border border-pine/30;
+  }
+
+  .btn-quiet:hover {
+    @apply border-pine bg-pine/5;
+  }
+
+  .skip-link {
+    @apply absolute left-4 -top-16 z-50 bg-pine text-linen px-4 py-2 rounded focus:top-4 transition-[top] duration-150;
+  }
+
+  .section {
+    @apply px-6 sm:px-10 py-16 sm:py-20;
+  }
+
+  .section-inner {
+    @apply mx-auto max-w-content;
+  }
+
+  .hairline {
+    @apply border-t border-sand;
+  }
+}

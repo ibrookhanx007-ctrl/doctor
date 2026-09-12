@@ -1,0 +1,79 @@
+---
+// Loads the Cal.com embed once per page and wires up every element carrying
+// data-cal-link to open a booking popup. Rendered once from Layout.astro.
+---
+<script is:inline define:vars={{ brandColor: '#1E3D34' }}>
+  (function (C, A, L) {
+    let p = function (a, ar) { a.q.push(ar); };
+    let d = C.document;
+    C.Cal = C.Cal || function () {
+      let cal = C.Cal;
+      let ar = arguments;
+      if (!cal.loaded) {
+        cal.ns = {};
+        cal.q = cal.q || [];
+        const script = d.createElement('script');
+        script.src = A;
+        script.onload = function () { C.__calEmbedReady = true; };
+        script.onerror = function () { C.__calEmbedReady = false; };
+        d.head.appendChild(script);
+        cal.loaded = true;
+      }
+      if (ar[0] === L) {
+        const api = function () { p(api, arguments); };
+        const namespace = ar[1];
+        api.q = api.q || [];
+        if (typeof namespace === 'string') {
+          cal.ns[namespace] = cal.ns[namespace] || api;
+          p(cal.ns[namespace], ar);
+          p(cal, ['initNamespace', namespace]);
+        } else {
+          p(cal, ar);
+        }
+        return;
+      }
+      p(cal, ar);
+    };
+  })(window, 'https://app.cal.com/embed/embed.js', 'init');
+
+  window.Cal('init', { origin: 'https://cal.com' });
+  window.Cal('ui', {
+    theme: 'light',
+    styles: { branding: { brandColor } },
+    hideEventTypeDetails: false,
+    layout: 'month_view',
+  });
+
+  // Any link or button on the site with data-cal-link opens a booking popup.
+  // Elements keep a real href to /book as a no-JS fallback.
+  document.addEventListener('click', function (event) {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const trigger = target.closest('[data-cal-link]');
+    if (!trigger) return;
+    event.preventDefault();
+    const calLink = trigger.getAttribute('data-cal-link');
+    let config = { layout: 'month_view' };
+    const rawConfig = trigger.getAttribute('data-cal-config');
+    if (rawConfig) {
+      try {
+        config = { ...config, ...JSON.parse(rawConfig) };
+      } catch (err) {
+        // ignore malformed config, fall back to default
+      }
+    }
+    window.Cal('modal', { calLink, config });
+
+    // If the Cal.com embed script can't load (blocked by an ad blocker,
+    // offline, etc.) fall back to a real page navigation rather than a
+    // dead button.
+    const fallbackHref = trigger.getAttribute('href');
+    if (fallbackHref) {
+      setTimeout(function () {
+        if (window.__calEmbedReady !== true) {
+          window.location.href = fallbackHref;
+        }
+      }, 3500);
+    }
+  });
+</script>

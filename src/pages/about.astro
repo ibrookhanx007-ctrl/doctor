@@ -1,0 +1,54 @@
+---
+import Layout from '../layouts/Layout.astro';
+import MeetDentist from '../components/MeetDentist.astro';
+import BookingButton from '../components/BookingButton.astro';
+import { STAFF } from '../data/staff';
+---
+<Layout
+  title="About"
+  description="The story behind Northgate Family Dental, our approach to care, and the team you'll meet at your visit."
+>
+  <section class="section pb-10">
+    <div class="section-inner">
+      <h1 class="text-4xl sm:text-5xl">About Northgate</h1>
+      <p class="mt-4 max-w-prose text-lg text-ink-soft leading-relaxed">
+        We opened on Merrimon Avenue in 2011 with two chairs and moved to our current
+        building on Northgate Avenue in 2019, mostly so we could add a third and fourth
+        chair without patients tripping over each other in the hallway.
+      </p>
+      <p class="mt-4 max-w-prose text-ink-soft leading-relaxed">
+        We're still small on purpose. Six people work here, and most weeks you'll see the
+        same two or three of us every visit. We think that matters more than a fancy
+        waiting room.
+      </p>
+    </div>
+  </section>
+
+  <div class="hairline"></div>
+  <MeetDentist />
+  <div class="hairline"></div>
+
+  <section class="section" aria-labelledby="team-heading">
+    <div class="section-inner">
+      <h2 id="team-heading" class="text-3xl sm:text-4xl">The rest of the team</h2>
+      <ul class="mt-6 divide-y divide-sand max-w-prose">
+        {STAFF.map((member) => (
+          <li class="py-4 flex justify-between gap-6">
+            <span class="font-serif text-lg text-pine">{member.name}</span>
+            <span class="text-ink-soft">{member.role}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section bg-pine text-linen">
+    <div class="section-inner flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      <div>
+        <h2 class="text-3xl text-linen">Come see us</h2>
+        <p class="mt-2 text-linen/80 max-w-prose">We'd like to meet you.</p>
+      </div>
+      <BookingButton />
+    </div>
+  </section>
+</Layout>

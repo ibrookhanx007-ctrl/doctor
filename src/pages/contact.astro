@@ -1,0 +1,120 @@
+---
+import Layout from '../layouts/Layout.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import BookingButton from '../components/BookingButton.astro';
+import { ADDRESS, EMAIL, HOURS, PHONE_DISPLAY, PHONE_TEL } from '../data/site';
+---
+<Layout
+  title="Contact"
+  description="Get in touch with Northgate Family Dental in Asheville, NC — phone, email, address, hours, and a contact form."
+>
+  <section class="section pb-10">
+    <div class="section-inner">
+      <h1 class="text-4xl sm:text-5xl">Contact us</h1>
+      <p class="mt-4 max-w-prose text-lg text-ink-soft leading-relaxed">
+        Call for anything urgent. For everything else, the form below reaches our front desk
+        directly and we'll get back to you within a business day.
+      </p>
+    </div>
+  </section>
+
+  <section class="section pt-0">
+    <div class="section-inner grid gap-12 lg:grid-cols-2">
+      <div>
+        <h2 class="text-2xl">Send a message</h2>
+        <form
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="company"
+          class="mt-5 space-y-4 max-w-md"
+        >
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="hidden">
+            <label>Don't fill this out if you're human: <input name="company" /></label>
+          </p>
+
+          <div>
+            <label for="name" class="block font-medium mb-1">Name</label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              required
+              class="w-full border border-sand bg-linen-100 px-4 py-2.5 rounded focus:border-pine"
+            />
+          </div>
+
+          <div>
+            <label for="email" class="block font-medium mb-1">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              class="w-full border border-sand bg-linen-100 px-4 py-2.5 rounded focus:border-pine"
+            />
+          </div>
+
+          <div>
+            <label for="phone" class="block font-medium mb-1">Phone <span class="text-ink-soft font-normal">(optional)</span></label>
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              class="w-full border border-sand bg-linen-100 px-4 py-2.5 rounded focus:border-pine"
+            />
+          </div>
+
+          <div>
+            <label for="message" class="block font-medium mb-1">Message</label>
+            <textarea
+              id="message"
+              name="message"
+              rows="5"
+              required
+              class="w-full border border-sand bg-linen-100 px-4 py-2.5 rounded focus:border-pine"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn-book">Send message</button>
+        </form>
+
+        <div class="mt-10 pt-8 border-t border-sand">
+          <p class="text-ink-soft">Prefer to book directly?</p>
+          <div class="mt-3"><BookingButton /></div>
+        </div>
+      </div>
+
+      <div>
+        <dl class="space-y-4">
+          <div>
+            <dt class="font-serif text-lg text-pine">Address</dt>
+            <dd class="text-ink-soft">{ADDRESS.line1}<br />{ADDRESS.line2}</dd>
+          </div>
+          <div>
+            <dt class="font-serif text-lg text-pine">Phone</dt>
+            <dd><a href={`tel:${PHONE_TEL}`} class="text-ink-soft no-underline hover:text-pine">{PHONE_DISPLAY}</a></dd>
+          </div>
+          <div>
+            <dt class="font-serif text-lg text-pine">Email</dt>
+            <dd><a href={`mailto:${EMAIL}`} class="text-ink-soft no-underline hover:text-pine">{EMAIL}</a></dd>
+          </div>
+          <div>
+            <dt class="font-serif text-lg text-pine">Hours</dt>
+            <dd>
+              <ul class="mt-1 space-y-1 max-w-[280px]">
+                {HOURS.filter((h) => h.hours !== 'Closed').map((row) => (
+                  <li class="flex justify-between gap-4 text-ink-soft">
+                    <span>{row.label}</span><span class="whitespace-nowrap">{row.hours}</span>
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+        </dl>
+        <MapEmbed class="mt-6 min-h-[280px]" />
+      </div>
+    </div>
+  </section>
+</Layout>

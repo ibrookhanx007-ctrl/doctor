@@ -1,0 +1,60 @@
+---
+import { calLink } from '../data/site';
+const newPatientLink = calLink('newPatient');
+---
+<section class="bg-pine text-linen" aria-label="Next available appointments">
+  <div class="mx-auto max-w-content px-6 sm:px-10 py-8">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+      <p class="font-serif text-lg sm:text-xl shrink-0">Next available</p>
+      <div id="availability-slots" class="flex flex-wrap gap-3 min-h-[52px]" aria-live="polite">
+        <span class="sr-only" id="availability-status">Loading next available appointment times</span>
+        <div class="h-[52px] w-[150px] rounded bg-linen/10 animate-pulse" aria-hidden="true"></div>
+        <div class="h-[52px] w-[150px] rounded bg-linen/10 animate-pulse" aria-hidden="true"></div>
+        <div class="h-[52px] w-[150px] rounded bg-linen/10 animate-pulse" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline define:vars={{ newPatientLink }}>
+  (function () {
+    const container = document.getElementById('availability-slots');
+    const status = document.getElementById('availability-status');
+    if (!container) return;
+
+    function renderError() {
+      container.innerHTML =
+        '<a class="btn-book" href="/book" data-cal-link="' + newPatientLink + '">See open times</a>';
+    }
+
+    fetch('/api/availability')
+      .then(function (res) {
+        if (!res.ok) throw new Error('bad response');
+        return res.json();
+      })
+      .then(function (data) {
+        const slots = data.slots || [];
+        if (!slots.length) return renderError();
+        container.innerHTML = '';
+        slots.forEach(function (slot) {
+          const a = document.createElement('a');
+          a.href = '/book?type=new-patient-exam&date=' + slot.isoDate;
+          a.className =
+            'flex flex-col items-start rounded border border-linen/25 px-4 py-2 no-underline text-linen hover:bg-linen/10 hover:border-linen/50 transition-colors';
+          a.setAttribute('data-cal-link', newPatientLink);
+          a.setAttribute('data-cal-config', JSON.stringify({ layout: 'month_view', date: slot.isoDate }));
+          const date = document.createElement('span');
+          date.className = 'text-xs text-linen/70';
+          date.textContent = slot.dateLabel;
+          const time = document.createElement('span');
+          time.className = 'font-serif text-lg leading-tight';
+          time.textContent = slot.timeLabel;
+          a.appendChild(date);
+          a.appendChild(time);
+          container.appendChild(a);
+        });
+        if (status) status.textContent = 'Next available appointment times loaded';
+      })
+      .catch(renderError);
+  })();
+</script>

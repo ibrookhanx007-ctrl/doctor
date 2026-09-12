@@ -1,0 +1,24 @@
+---
+import { calLink, EVENT_TYPES, type EventKey } from '../data/site';
+
+interface Props {
+  event?: EventKey;
+  variant?: 'solid' | 'quiet';
+  class?: string;
+  label?: string;
+}
+
+const { event, variant = 'solid', class: className = '', label } = Astro.props;
+const link = calLink(event);
+const buttonLabel = label ?? (event ? `Book ${EVENT_TYPES[event].label}` : 'Book Your Visit');
+const href = event ? `/book?type=${EVENT_TYPES[event].slug}` : '/book';
+const cls = variant === 'solid' ? 'btn-book' : 'btn-quiet';
+---
+<a
+  href={href}
+  class={`${cls} ${className}`}
+  data-cal-link={link}
+  data-cal-config={JSON.stringify({ layout: 'month_view' })}
+>
+  {buttonLabel}
+</a>

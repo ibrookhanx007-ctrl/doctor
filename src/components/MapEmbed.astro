@@ -1,0 +1,20 @@
+---
+import { ADDRESS, MAP_EMBED_SRC, MAP_LINK } from '../data/site';
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+<div class={`overflow-hidden rounded border border-sand ${className}`}>
+  <iframe
+    src={MAP_EMBED_SRC}
+    class="w-full h-full min-h-[280px] block"
+    style="border:0"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    title={`Map showing ${ADDRESS.full}`}
+  ></iframe>
+  <p class="sr-only">
+    <a href={MAP_LINK}>Open directions to {ADDRESS.full} in Google Maps</a>
+  </p>
+</div>
